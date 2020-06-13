@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as BS
 import requests
 import time
 #import bitly_api
-token = 'c3818740c6bf83c97ff76b2988aab95ed06be60326a8db18bc979b908b0c50db76a02283834dff0c4bfc8' 
+token = 'TOKEN' 
 
 session = vk_api.VkApi(token = token)
 vk = session.get_api()
