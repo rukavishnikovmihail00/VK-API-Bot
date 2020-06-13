@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as BS
 import requests
 import time
 #import bitly_api
-token = 'TOKEN'
+token = 'c3818740c6bf83c97ff76b2988aab95ed06be60326a8db18bc979b908b0c50db76a02283834dff0c4bfc8' 
 
 session = vk_api.VkApi(token = token)
 vk = session.get_api()
@@ -76,6 +76,28 @@ def get_news():
     + str(5) +") " + news[8] + "\n" + news[9] + "\n"
     , 'random_id': random_id()})
 
+def get_korona_report():
+    r = requests.get('http://zdrav-nnov.ru/koronavirus/')
+    mas = []
+    soup = BS(r.text)
+
+    date = soup.find('div', {'class':'statistic-date'})
+    mas.append(date.text)
+
+    html = soup.find('div', {'class':'statistic-blocks'})
+
+
+
+    for el in html.findAll('div', {'class':'statistic-block border-radius'}):
+        mas.append(el.text)
+    
+
+    session.method('messages.send', {'user_id': event.user_id, 'message': mas[0] + "\n\n" + mas[1] + "\n\n"
+    + mas[2] + "\n\n" + mas[3] + "\n\n"
+    + mas[4] + "\n\n" + mas[5] + "\n\n"
+    + mas[6] + "\n" 
+    , 'random_id': random_id()})
+
 while True:
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.from_user:
@@ -89,9 +111,10 @@ while True:
                     get_weather()
                 elif response == 'новости':
                     get_news()
+                elif response == 'коронавирус':
+                    get_korona_report()    
                 elif response == 'установить таймер':
                     session.method('messages.send', {'user_id': event.user_id, 'message': 'Введите время в секундах: ', 'random_id': random_id()})
                 elif response.isdigit():
                     set_timer(response)
-
 
